@@ -1,7 +1,7 @@
 
 import math
 
-DATA_FILE = 'karate-network.csv'
+DATA_FILE = 'karate-network-simple.csv'
 
 def main():
     graph = load_matrix(DATA_FILE)
@@ -95,9 +95,11 @@ class Graph(object):
         self.group_b = []
         for i in range(self.cut_size):
             self.vertex[i].set_group('A')
+            #print "vertex " + str(self.vertex[i].get_id()) + " set to A"
             self.group_a.append(self.vertex[i])
         for i in range(self.cut_size, len(self.vertex)):
             self.vertex[i].set_group('B')
+            #print "vertex " + str(self.vertex[i].get_id()) + " set to B"
             self.group_b.append(self.vertex[i])
 
     def get_random_groups(self):
@@ -122,6 +124,10 @@ class Graph(object):
     def get_vertexs(self):
         return self.vertex
 
+    def print_graph(self):
+        values = {v.id: v.get_group() for v in self.get_vertexs()}
+        print '---' + str(values)
+
 
 class KernighanLin(object):
     def __init__(self, graph):
@@ -132,6 +138,9 @@ class KernighanLin(object):
             self.graph.get_random_groups()
         cut_size = self.graph.get_cut_size()
         nominal_cut_size = float("Inf")
+
+        #self.print_vertex()
+        self.print_result()
         
         min_id = -1
         self.swaps = []
@@ -153,9 +162,11 @@ class KernighanLin(object):
             self.group_a_unchosen, self.group_b_unchosen = \
             self.graph.get_groups()
 
+            self.print_result()
+
             print('============')
 
-
+        #self.print_vertex()
         self.print_result()
 
     def single_swaps(self):
@@ -195,9 +206,18 @@ class KernighanLin(object):
         vertice_a.set_group('B')
         vertice_b.set_group('A')
 
+    def print_vertex(self):
+        str_out = "\nvertex = {"
+        for v in self.graph.get_vertexs():
+            str_out += "%s ;"%v.get_id()
+        str_out += "} \n"
+        print(str_out)
+
+
     def print_result(self):
         values = {v.id: v.get_group() for v in self.graph.get_vertexs()}
-        str_out = "["
+        #print '+++' + str(values)
+        str_out = "+++["
         for key in values.iterkeys():
             if values[key] == 'A':
                 val = '1'
